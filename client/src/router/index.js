@@ -12,16 +12,16 @@ import VerifyEmail from '../views/VerifyEmail';
 
 import store from '../store';
 
-const requireAuthenticated = (to, from, next) => {
-  store.dispatch('auth/initialize')
-    .then(() => {
-      if (!store.getters['auth/isAuthenticated']) {
-        next('/login');
-      } else {
-        next();
-      }
-    });
-};
+// const requireAuthenticated = (to, from, next) => {
+//   store.dispatch('auth/initialize')
+//     .then(() => {
+//       if (!store.getters['auth/isAuthenticated']) {
+//         next('/login');
+//       } else {
+//         next();
+//       }
+//     });
+// };
 
 const requireUnauthenticated = (to, from, next) => {
   store.dispatch('auth/initialize')
@@ -51,12 +51,12 @@ export default new Router({
     {
       path: '/about',
       component: About,
-      beforeEnter: requireAuthenticated,
+      // beforeEnter: requireAuthenticated,
     },
     {
       path: '/home',
       component: Home,
-      beforeEnter: requireAuthenticated,
+      // beforeEnter: requireAuthenticated,
     },
     {
       path: '/password_reset',

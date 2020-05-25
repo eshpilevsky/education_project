@@ -9,6 +9,7 @@ djangorestframework = ">=3.11.0"
 django-allauth = ">=0.42.0"
 six = "==1.15.0"
 Django = ">=3.0.6"
+django-rest-swagger = ">=2.2.0"
 
 [dev-packages]
 factory-boy = "*"
