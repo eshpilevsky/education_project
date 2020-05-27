@@ -1,0 +1,44 @@
+<div class="container">
+  <h1 class="primary-color">Привет</h1>
+
+  <div *ngIf="loading" class="text-center align-middle">
+    <span class="spinner-border primary-color"></span>
+    <br />
+    <small>
+      Lorem
+    </small>
+  </div>
+
+  <div *ngIf="!loading">
+    <div *ngIf="verificationOk">
+      <div class="alert alert-success text-center">
+        Проверка прошла успешно
+      </div>
+      <p>
+        Спасибо за присоединение к сообществу Education Platform! Теперь вы можете опробовать все наши возможности.
+      </p>
+    </div>
+    <div *ngIf="!verificationOk">
+      <div class="alert alert-danger text-center">
+        Проверка не удалась
+      </div>
+      <p>
+        К сожалению, срок действия этой ссылки для проверки истек. Вы можете зарегистрироваться здесь и просто получить новый.
+      </p>
+    </div>
+    <div class="row">
+      <div class="col-sm"></div>
+      <div class="col text-center">
+        <a
+          routerLink="/account/login"
+          class="btn btn-primary"
+          style="width: 50%;"
+        >
+          <span *ngIf="!loggedIn">Login</span>
+          <span *ngIf="loggedIn">Продолжить</span>
+        </a>
+      </div>
+      <div class="col-sm"></div>
+    </div>
+  </div>
+</div>

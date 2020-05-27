@@ -1,0 +1,44 @@
+<p>
+  Посмотрите наше короткое видео, и вы точно будете знать, что делать дальше. Затем нажмите «Далее» и мы начнем искать вашего репетитора!
+</p>
+
+<div class="row">
+  <div class="col-12 col-md-8 offset-md-2">
+    <div class="row">
+      <div class="col-12">
+        <video
+          class="w-100"
+          playsinline
+          controls
+          autoplay
+          (play)="onVideoPlaying()"
+          (error)="onVideoError()"
+        >
+          <source src="assets/video/обучалка.mp4" type="video/mp4" />
+          <source src="assets/video/обучалка.webm" type="video/webm" />
+          Воспроизведение видео не поддерживается вашим браузером или устройством. Нажмите
+          <a href="" (click)="onNext()">hier</a>, чтобы скачать это видео.
+          <a href="assets/video/Wartefilmchen_2.mp4" download="true">Скаачать</a>
+        </video>
+      </div>
+    </div>
+    <div class="row my-2">
+      <div class="col-12 d-flex justify-content-around">
+        <button type="button" class="btn btn-danger" (click)="onBack()">
+          Назад
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary text-center"
+          [disabled]="skipDisabledTimer > 0"
+          (click)="onNext()"
+        >
+          Продолжить
+          <ng-container *ngIf="skipDisabledTimer > 0" class="muted"
+            >({{ skipDisabledTimer }})</ng-container
+          >
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

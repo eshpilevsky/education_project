@@ -1,0 +1,41 @@
+<h1 class="primary-color">Найди своего репетитора</h1>
+
+<ng-container [ngSwitch]="isInstructionVideoShowing">
+  <ng-container *ngSwitchCase="false">
+    <p>
+      Привет {{ user.firstName }}, Дайте нам больше информации от вас, чтобы мы могли найти идеального репетитора для вас:
+    </p>
+
+    <form [formGroup]="studentForm" (ngSubmit)="onFormSubmit()">
+      <div class="form-group">
+        <label for="subjects">По какой теме у вас есть вопрос?</label>
+        <select name="subjects" class="form-control custom-select" [formControl]="f.subject">
+          <option *ngFor="let subject of constants?.subjects" [value]="subject.id">
+            {{ subject.name }}
+          </option>
+        </select>
+        <div class="invalid-feedback">
+          <div *ngIf="f.subject.errors?.required">
+            Вы должны выбрать предмет
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="submitSuccess || loading"
+      >
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Разместить
+      </button>
+    </form>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="true">
+    <roulette-strudent-instruction-video
+      (prevClick)="onVideoPrev()"
+      (nextClick)="onVideoNext()"
+    ></roulette-strudent-instruction-video>
+  </ng-container>
+</ng-container>

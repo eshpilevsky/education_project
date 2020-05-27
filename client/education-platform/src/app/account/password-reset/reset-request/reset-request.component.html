@@ -1,0 +1,41 @@
+<div class="row justify-content-center">
+  <div class="col-md-9">
+    <h2 class="text-primary">Забыли пароль?</h2>
+    <p>
+      Нет проблем, просто введите адрес электронной почты, который вы использовали для регистрации. <br /> Затем мы вышлем вам ссылку, с помощью которой вы сможете сбросить пароль.
+    </p>
+    <div *ngIf="submitSuccess" class="alert alert-success text-center">
+      <p>Сообщение было отправлено. Посмотрите в своем почтовом ящике.</p>
+    </div>
+    <div *ngIf="error" class="alert alert-danger text-center">
+      {{ error | json }}
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-label-group">
+        <input
+          type="email"
+          name="email"
+          id="email"
+          placeholder="E-Mail"
+          class="form-control"
+          formControlName="email"
+          required
+        />
+        <label for="email">E-Mail</label>
+        <div class="invalid-feedback">
+          Вы должны предоставить действительный адрес электронной почты.
+        </div>
+      </div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="submitSuccess || loading"
+      >
+        Отправить <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+      </button>
+    </form>
+  </div>
+</div>

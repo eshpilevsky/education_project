@@ -1,0 +1,57 @@
+<div class="container">
+  <div *ngIf="type === null">
+    <div class="text-center">
+      <h4>
+        На что вы хотите зарегистрироваться?
+      </h4>
+      <p>Просто взгляните, и вы готовы к работе!</p>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <a
+          routerLink="/account/student/register"
+          class="btn btn-primary btn-block"
+          >Студент</a
+        >
+      </div>
+      <div class="col-6">
+        <a
+          routerLink="/account/teacher/register"
+          class="btn btn-primary btn-block"
+          >Учитель</a
+        >
+      </div>
+    </div>
+  </div>
+  <div *ngIf="type === 'student'">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <h1 class="primary-color">
+          Наши репетиторы готовы ответить на ваши вопросы!
+        </h1>
+        <p class="lead">
+          Пожалуйста, зарегистрируйтесь здесь сейчас. Тогда вы можете начать прямо сейчас и выберете своего репетитора с вашими вопросами!
+        </p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="type === 'teacher'">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <h1 class="primary-color">Студенты ждут вас с нетерпением!</h1>
+        <p class="lead">
+          С вашей поддержкой ученики могут осваивать содержание школы и оставаться на почве. Помогите им с комфортом из дома и в любое время.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<account-student-form
+  *ngIf="type === 'student'"
+  [register]="true"
+></account-student-form>
+<account-teacher-form
+  *ngIf="type === 'teacher'"
+  [register]="true"
+></account-teacher-form>
