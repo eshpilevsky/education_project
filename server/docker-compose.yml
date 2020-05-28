@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  web:
+    image: educationplatform/backend:latest
+    command: daphne -b 0.0.0.0 -p 8000 educationplatform.asgi:application
+    working_dir: /code/education-platform
+    volumes:
+      - ./education-platform/educationplatform/settings_local.py:/code/education-platform/educationplatform/settings_local.py:ro
+      - type: bind
+        source: ./media
+        target: /opt/media
+      - type: volume
+        source: static
+        target: /opt/static
+
+  celery_worker:
+    image: educationplatform/backend:latest
+    working_dir: /code/education-platform
+    volumes:
+      - ./education-platform/educationplatform/settings_local.py:/code/education-platform/educationplatform/settings_local.py:ro
+    command: celery -A educationplatform worker -l info
+    depends_on:
+      - rabbitmq
+      - web
+
+  celery_beat:
+    image: educationplatform/backend:latest
+    working_dir: /code/education-platform
+    volumes:
+      - ./education-platform/educationplatform/settings_local.py:/code/education-platform/educationplatform/settings_local.py:ro
+    command: celery -A educationplatform beat -S django -l info
+    depends_on:
+      - rabbitmq
+      - web
+
+  rabbitmq:
+    image: rabbitmq
+
+  nginx:
+    image: nginx:stable
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - type: bind
+        source: ./media
+        target: /opt/media
+      - type: volume
+        source: static
+        target: /opt/static
+        volume:
+          nocopy: true
+    ports:
+      - 8000:80
+
+volumes:
+  static:

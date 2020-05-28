@@ -14,7 +14,7 @@
       ></ngb-rating>
       <div class="invalid-feedback">
         <div *ngIf="f.rating.errors">
-          Bitte gib uns ein Rating.
+          Please give us a rating.
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@
   <div class="row form-group">
     <textarea
       class="form-control"
-      placeholder="Wie fandest du das Meeting?"
+      placeholder="What did you think of the meeting?"
       name="feedback-message"
       rows="3"
       formControlName="message"
@@ -40,7 +40,7 @@
         *ngIf="loading"
         class="spinner-border spinner-border-sm mr-1"
       ></span>
-      Absenden
+      Submit
     </button>
     <roulette-report
       *ngIf="requestType == 'teacher'"

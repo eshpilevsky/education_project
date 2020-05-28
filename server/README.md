@@ -1,20 +1,15 @@
-# server development
+## Development environment
+Needed:
+  - python3
+  - virtualenv (`pip3 install virtualenv`)
+Create virtualenv to better manage requirements.: `virtualenv <folder_name>`
+After that `source <foldername>/bin/activate.sh`
 
-``` bash
-# install dependencies
-pipenv install --dev
-pipenv shell
+Um die aktuellen reqs zu installieren (im VirtualEnv):
+`pip3 install -r requirements.txt`
 
-# setup development database
-./manage.py makemigrations api --noinput
-./manage.py migrate --noinput
+When new requirements are added (via pip3 install ...):
+`pip3 freeze > requirements.txt`
 
-# load data
-./manage.py createsuperuser --username=root --email=root@example.com --noinput
-./manage.py create_fixtures
-
-# run development server
-./manage.py runserver --settings=server.settings
-```
-
-**Note:** You should install [pipenv](https://docs.pipenv.org/) before installing any python dependencies.
+## Testserver start
+`python manage.py runserver`
