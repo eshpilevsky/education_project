@@ -31,65 +31,16 @@ TEACHER_VERIFICATION_PLAINTEXT = get_template("teacher_verification.txt")
 TEACHER_VERIFICATION_HTMLY = get_template("teacher_verification.html")
 
 
-class SchoolType(models.Model):
-    name = models.CharField(_("Name of the school type"), max_length=50)
-
-    class Meta:
-        verbose_name = _("School type")
-        verbose_name_plural = _("School types")
-
-    def __str__(self):
-        return self.name
-
-
-class SchoolData(models.Model):
-    school_type = models.ForeignKey(SchoolType, on_delete=models.CASCADE)
-    grade = models.IntegerField(_("Great"))
-
-    class Meta:
-        verbose_name = _("School type and class combination")
-        verbose_name_plural = _("School type and class combinations")
-
-    def __str__(self):
-        return str(self.school_type) + " - " + str(self.grade) + ". Great"
-
-
-class State(models.Model):
-    name = models.CharField(_("Name"), max_length=50, unique=True)
-    shortcode = models.CharField(_("Short name"), max_length=2)
-
-    class Meta:
-        verbose_name = _("State")
-        verbose_name_plural = _("States")
-
-    def __str__(self):
-        return self.name + " (%s)" % self.shortcode
-
-
-class Subject(models.Model):
-    name = models.CharField(_("Name"), max_length=50)
-
-    class Meta:
-        verbose_name = _("Subject")
-        verbose_name_plural = _("Subjects")
-
-    def __str__(self):
-        return self.name
-
-
 class StudentData(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, unique=True)
-
-    school_data = models.ForeignKey(SchoolData, verbose_name=_(
-        "Class and type of school"), on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = _("Student data")
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return str(self.school_data) + ' - ' + str(self.user)
+        return str(self.user)
 
 
 def teacher_upload_path(instance, filename):
@@ -107,10 +58,6 @@ class TeacherData(models.Model):
     class Meta:
         verbose_name = _("Teacherdate")
         verbose_name_plural = verbose_name
-
-    schooldata = models.ManyToManyField(
-        SchoolData, verbose_name=_("Possible school types / grades"))
-    subjects = models.ManyToManyField(Subject, verbose_name=_("Subjects"))
 
     verified = models.BooleanField(_("Verified"), default=False)
     verification_file = models.FileField(verbose_name=_(
@@ -192,8 +139,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(
         verbose_name=_("Accession"), auto_now_add=True)
 
-    state = models.ForeignKey(
-        State, on_delete=models.PROTECT, verbose_name=_("State"))
+    state = models.CharField(_("State"), max_length=50, blank=True)
     first_name = models.CharField(_("First name"), max_length=50, blank=False)
     last_name = models.CharField(_("Last name"), max_length=50, blank=True)
 

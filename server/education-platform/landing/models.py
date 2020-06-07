@@ -14,3 +14,8 @@ class InterestedIndividual(models.Model):
     email = models.EmailField(max_length=254, unique=True)
     updates = models.BooleanField(default=False)
     ind_type = models.CharField(max_length=2, choices=TYPE_CHOICES)
+
+class Course(models.Model):
+    teacher = models.OneToOneField
+    updates = models.BooleanField(default=False)
+    ind_type = models.CharField(max_length=2, choices=TYPE_CHOICES)

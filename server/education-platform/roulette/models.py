@@ -18,7 +18,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from account.models import StudentData, Subject, TeacherData
+from account.models import StudentData, TeacherData
 
 
 class Report(models.Model):
@@ -117,101 +117,6 @@ class Request(models.Model):
 
     class Meta:
         abstract = True
-
-
-class StudentRequest(Request):
-    """student request always additionally includes a Subject representing the subject he/she needs help with"""
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-
-
-class TeacherRequest(Request):
-    """teacherrequest can store additional data"""
-    pass
-
-
-@receiver(post_save, sender=TeacherRequest)
-@receiver(post_save, sender=StudentRequest)
-def look_for_match(sender, instance, **kwargs):
-    if instance.is_active and not hasattr(instance, 'match'):
-        if sender is StudentRequest:
-            # look for open teacher requests and match the best one
-            teacher_requests = TeacherRequest.objects.exclude(
-                user__in=instance.failed_matches.all())
-
-            teacher_requests = teacher_requests.exclude(is_active=False).exclude(
-                user__teacherdata__verified=False).filter(match__isnull=True)
-            # filter teacher requests for matching subject
-            filtered = []
-            for r in teacher_requests.all():
-                if r.user.teacherdata.subjects.filter(pk=instance.subject.id).exists() \
-                   and not (r.failed_matches.filter(pk=instance.user.id).exists()):
-                   # and r.user.teacherdata.schooldata.filter(id=instance.user.studentdata.school_data.id).exists(): TODO: Reinsert after enough teachers
-                    filtered.append(r)
-            if filtered:
-                best_teacher = max(
-                    filtered, key=lambda k: calculate_matching_score(instance, k))
-                Match.objects.create(
-                    student_request=instance,
-                    teacher_request=best_teacher
-                )
-        elif sender is TeacherRequest:
-            student_requests = StudentRequest.objects.exclude(is_active=False).exclude(
-                user__in=instance.failed_matches.all())
-            student_requests = student_requests.filter(match__isnull=True)
-
-            subjects = instance.user.teacherdata.subjects.all()
-            schooldata = instance.user.teacherdata.schooldata.all()
-            student_requests = student_requests.filter(subject__in=subjects)
-            # .filter(
-            #    user__studentdata__school_data__in=schooldata)
-            filtered = []
-            for r in student_requests.all():
-                if not (r.failed_matches.filter(pk=instance.user.id).exists()):
-                    filtered.append(r)
-
-            if filtered:
-                best_student = max(
-                    filtered, key=lambda k: calculate_matching_score(k, instance))
-
-                Match.objects.create(
-                    student_request=best_student,
-                    teacher_request=instance
-                )
-
-
-def calculate_matching_score(student_request: StudentRequest, teacher_request: TeacherRequest):
-    score = 1
-    student = student_request.user
-    teacher = teacher_request.user
-    if student.state == teacher.state:
-        score += 5
-    if student.gender == teacher.gender:
-        score += 3
-    if student.studentdata.school_data in teacher.teacherdata.schooldata.all():
-        score += 10
-    return score
-
-
-class Match(models.Model):
-    """Represents a Match between two requests StudentRequest, TeacherRequest
-
-    If two matching requests StudentRequest <-> TeacherRequest are found, a Match is created. Both sides have to agree to complete the Match
-    Only one Match can be assigned to a request at any time. (OneToOneField)
-    If the match is not successfull, the corresponding user is added to both failed_matches lists
-    We keep track of the created_time and the changed_time to be able to set upper reaction time-limits on matches
-    """
-    student_request = models.OneToOneField(
-        StudentRequest, on_delete=models.CASCADE)
-    teacher_request = models.OneToOneField(
-        TeacherRequest, on_delete=models.CASCADE)
-
-    student_agree = models.BooleanField(default=False)
-    teacher_agree = models.BooleanField(default=False)
-
-    created_time = models.DateTimeField(auto_now_add=True)
-    changed_time = models.DateTimeField(auto_now=True)
-
-    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
 
 @receiver(pre_save, sender=Match)
