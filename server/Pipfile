@@ -14,6 +14,7 @@ django-cors-headers = "*"
 django-templated-mail = "*"
 drf-yasg = "*"
 pillow = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.8"
