@@ -7,7 +7,7 @@ SECRET_KEY = 'be@lrufr(0%6-mw#8ze*m92g_$jgiw15s0-3d95ym%f!5+&mwv'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://178.172.137.157']
+ALLOWED_HOSTS = ['178.172.137.157']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
