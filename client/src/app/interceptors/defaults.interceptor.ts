@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class DefaultsInterceptor implements HttpInterceptor {
-  private BASE_URL: string = 'http://localhost:8000/';
+  private BASE_URL: string = 'http://178.172.137.157/';
 
   constructor() {}
 

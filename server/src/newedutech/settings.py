@@ -67,7 +67,7 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
-DOMAIN = 'localhost:4200'
+DOMAIN = '185.179.83.116'
 SITE_NAME = 'New Edutech'
 DJOSER = {
     'ACTIVATION_URL': 'activate/{uid}/{token}',
@@ -92,12 +92,8 @@ EMAIL_USE_SSL = False
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'newedutech',
-        'USER': 'newedutechuser',
-        'PASSWORD': 'newedutechpass',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
