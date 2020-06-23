@@ -52,12 +52,43 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    BELARUS = 'BY'
+    RUSSIA = 'RU'
+    UKRAINE = 'UA'
+
+    COUNTRY = [
+        (BELARUS, 'Belarus'),
+        (RUSSIA, 'Russia'),
+        (UKRAINE, 'Ukraine'),
+    ]
+
+    country = models.CharField(
+        max_length=2,
+        choices=COUNTRY,
+    )
+
+    BYN = 'BYN'
+    RUB = 'RUB'
+    USD = 'USD'
+
+    CURRENCY = [
+        (BYN, 'BYN'),
+        (RUB, 'RUB'),
+        (USD, 'USD'),
+    ]
+
+    currency = models.CharField(
+        max_length=3,
+        choices=CURRENCY,
+    )
+
+    student_group = models.ForeignKey('StudentGroup', on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(max_length=255, unique=True)
     username = models.CharField(max_length=255, unique=True)
     firstname = models.CharField(max_length=255)
     lastname = models.CharField(max_length=255)
+    phone = models.CharField(max_length=30)
     balance = models.IntegerField(default=0)
-    room_number = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -71,3 +102,58 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+
+class StudentGroup(models.Model):
+    name = models.CharField(max_length=70)
+    subject = models.OneToOneField('Subject', on_delete=models.CASCADE)
+    group_level = models.OneToOneField('GroupLevel', on_delete=models.CASCADE)
+
+    MORNING = 'MORNING'
+    DAY = 'DAY'
+    EVENING = 'EVENING'
+
+    CLASS_TIME = [
+        (MORNING, 'MORNING'),
+        (DAY, 'DAY'),
+        (EVENING, 'EVENING'),
+    ]
+
+    class_time = models.CharField(
+        max_length=10,
+        choices=CLASS_TIME,
+    )
+
+    created = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(auto_now_add=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+
+class Subject(models.Model):
+    name = models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.name
+
+
+class GroupLevel(models.Model):
+    JUNIOR = 'JUNIOR'
+    MIDDLE = 'MIDDLE'
+    SENIOR = 'SENIOR'
+
+    LEVEL = [
+        (JUNIOR, 'JUNIOR'),
+        (MIDDLE, 'MIDDLE'),
+        (SENIOR, 'SENIOR'),
+    ]
+
+    level = models.CharField(
+        max_length=6,
+        choices=LEVEL,
+    )
+
+    def __str__(self):
+        return self.level
