@@ -1,0 +1,4 @@
+module.exports = {
+	BYPASS_ROOM_LOCK : 'BYPASS_ROOM_LOCK',
+	BYPASS_LOBBY     : 'BYPASS_LOBBY'
+};
