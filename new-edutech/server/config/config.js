@@ -55,7 +55,7 @@ module.exports =
 	*/
 	// URI and key for requesting geoip-based TURN server closest to the client
 	turnAPIKey    : 'examplekey',
-	turnAPIURI    : 'https://example.com/api/turn',
+	turnAPIURI    : 'turn:numb.viagenie.ca',
 	turnAPIparams : {
 		'uri_schema' 	: 'turn',
 		'transport' 		: 'tcp',
@@ -67,10 +67,10 @@ module.exports =
 	backupTurnServers : [
 		{
 			urls : [
-				'turn:turn.example.com:443?transport=tcp'
+				'turn:numb.viagenie.ca'
 			],
-			username   : 'example',
-			credential : 'example'
+			username   : 'webrtc@live.com',
+			credential : 'muazkh'
 		}
 	],
 	fileTracker  : 'wss://tracker.lab.vvc.niif.hu:443',
@@ -363,7 +363,7 @@ module.exports =
 			listenIps :
 			[
 				// change 192.0.2.1 IPv4 to your server's IPv4 address!!
-				{ ip: '192.0.2.1', announcedIp: null }
+				{ ip: '178.172.137.93', announcedIp: null }
 
 				// Can have multiple listening interfaces
 				// change 2001:DB8::1 IPv6 to your server's IPv6 address!!
