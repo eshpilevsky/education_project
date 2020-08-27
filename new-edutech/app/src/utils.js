@@ -1,3 +1,8 @@
+/**
+ * Create a function which will call the callback function
+ * after the given amount of milliseconds has passed since
+ * the last time the callback function was called.
+ */
 export const idle = (callback, delay) =>
 {
 	let handle;
@@ -13,6 +18,9 @@ export const idle = (callback, delay) =>
 	};
 };
 
+/**
+ * Error produced when a socket request has a timeout.
+ */
 export class SocketTimeoutError extends Error
 {
 	constructor(message)

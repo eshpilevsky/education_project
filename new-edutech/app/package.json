@@ -1,8 +1,8 @@
 {
 	"name": "new-edutech",
-	"version": "2.0.0",
+	"version": "3.3.0",
 	"private": true,
-	"description": "meeting service",
+	"description": "New edutech service",
 	"author": "Evgeny Shpilevsky",
 	"license": "MIT",
 	"homepage": "./",

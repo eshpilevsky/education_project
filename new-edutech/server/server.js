@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-process.title = 'newedutech';
+process.title = 'new-edutech-server';
 
 const config = require('./config/config');
 const fs = require('fs');
@@ -52,12 +52,17 @@ let statusLogger = null;
 if ('StatusLogger' in config)
 	statusLogger = new config.StatusLogger();
 
+// mediasoup Workers.
+// @type {Array<mediasoup.Worker>}
 const mediasoupWorkers = [];
 
+// Map of Room instances indexed by roomId.
 const rooms = new Map();
 
+// Map of Peer instances indexed by peerId.
 const peers = new Map();
 
+// TLS server configuration.
 const tls =
 {
 	cert          : fs.readFileSync(config.tls.cert),
@@ -94,7 +99,7 @@ const session = expressSession({
 	cookie            : {
 		secure   : true,
 		httpOnly : true,
-		maxAge   : 60 * 60 * 1000
+		maxAge   : 60 * 60 * 1000 // Expire after 1 hour since last request from user
 	}
 });
 
@@ -124,8 +129,10 @@ async function run()
 {
 	try
 	{
+		// Open the interactive server.
 		await interactiveServer(rooms, peers);
 
+		// start Prometheus exporter
 		if (config.prometheus)
 		{
 			await promExporter(rooms, peers, config.prometheus);
@@ -140,10 +147,13 @@ async function run()
 			await setupAuth();
 		}
 
+		// Run a mediasoup Worker.
 		await runMediasoupWorkers();
 
+		// Run HTTPS server.
 		await runHttpsServer();
 
+		// Run WebSocketServer.
 		await runWebSocketServer();
 
 		const errorHandler = (err, req, res) =>
@@ -185,6 +195,7 @@ function statusLog()
 function setupLTI(ltiConfig)
 {
 
+	// Add redis nonce store
 	ltiConfig.nonceStore = new imsLti.Stores.RedisStore(ltiConfig.consumerKey, redisClient);
 	ltiConfig.passReqToCallback= true;
 
@@ -192,6 +203,7 @@ function setupLTI(ltiConfig)
 		ltiConfig,
 		(req, lti, done) =>
 		{
+			// LTI launch parameters
 			if (lti)
 			{
 				const user = {};
@@ -215,6 +227,7 @@ function setupLTI(ltiConfig)
 					user.displayName = lti.lis_person_name_full;
 				}
 
+				// Perform local authentication if necessary
 				return done(null, user);
 
 			}
@@ -234,6 +247,12 @@ function setupOIDC(oidcIssuer)
 
 	oidcClient = new oidcIssuer.Client(config.auth.oidc.clientOptions);
 
+	// ... any authorization request parameters go here
+	// client_id defaults to client.client_id
+	// redirect_uri defaults to client.redirect_uris[0]
+	// response type defaults to client.response_types[0], then 'code'
+	// scope defaults to 'openid'
+
 	/* eslint-disable camelcase */
 	const params = (({
 		client_id,
@@ -246,8 +265,13 @@ function setupOIDC(oidcIssuer)
 	}))(config.auth.oidc.clientOptions);
 	/* eslint-enable camelcase */
 
+	// optional, defaults to false, when true req is passed as a first
+	// argument to verify fn
 	const passReqToCallback = false;
 
+	// optional, defaults to false, when true the code_challenge_method will be
+	// resolved from the issuer configuration, instead of true you may provide
+	// any of the supported values directly, i.e. "S256" (recommended) or "plain"
 	const usePKCE = false;
 
 	oidcStrategy = new Strategy(
@@ -276,13 +300,14 @@ function setupOIDC(oidcIssuer)
 
 async function setupAuth()
 {
+	// LTI
 	if (
 		typeof(config.auth.lti) !== 'undefined' &&
 		typeof(config.auth.lti.consumerKey) !== 'undefined' &&
 		typeof(config.auth.lti.consumerSecret) !== 'undefined'
 	) 	setupLTI(config.auth.lti);
 
-
+	// OIDC
 	if (
 		typeof(config.auth.oidc) !== 'undefined' &&
 		typeof(config.auth.oidc.issuerURL) !== 'undefined' &&
@@ -291,6 +316,7 @@ async function setupAuth()
 	{
 		const oidcIssuer = await Issuer.discover(config.auth.oidc.issuerURL);
 
+		// Setup authentication
 		setupOIDC(oidcIssuer);
 
 	}
@@ -298,6 +324,7 @@ async function setupAuth()
 	app.use(passport.initialize());
 	app.use(passport.session());
 
+	// loginparams
 	app.get('/auth/login', (req, res, next) =>
 	{
 		passport.authenticate('oidc', {
@@ -308,6 +335,7 @@ async function setupAuth()
 		})(req, res, next);
 	});
 
+	// lti launch
 	app.post('/auth/lti',
 		passport.authenticate('lti', { failureRedirect: '/' }),
 		(req, res) =>
@@ -316,6 +344,7 @@ async function setupAuth()
 		}
 	);
 
+	// logout
 	app.get('/auth/logout', (req, res) =>
 	{
 		const { peerId } = req.session;
@@ -335,6 +364,7 @@ async function setupAuth()
 		req.session.destroy(() => res.send(logoutHelper()));
 	});
 
+	// callback
 	app.get(
 		'/auth/callback',
 		passport.authenticate('oidc', { failureRedirect: '/auth/login' }),
@@ -423,18 +453,22 @@ async function runHttpsServer()
 
 	});
 
+	// Serve all files in the public folder as static files.
 	app.use(express.static('public'));
 
 	app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));
 
 	if (config.httpOnly === true)
 	{
+		// http
 		mainListener = http.createServer(app);
 	}
 	else
 	{
+		// https
 		mainListener = spdy.createServer(tls, app);
 
+		// http
 		const redirectListener = http.createServer(app);
 
 		if (config.listeningHost)
@@ -443,6 +477,7 @@ async function runHttpsServer()
 			redirectListener.listen(config.listeningRedirectPort);
 	}
 
+	// https or http
 	if (config.listeningHost)
 		mainListener.listen(config.listeningPort, config.listeningHost);
 	else
@@ -470,6 +505,9 @@ function isPathAlreadyTaken(url)
 	return false;
 }
 
+/**
+ * Create a WebSocketServer to allow WebSocket connections from browsers.
+ */
 async function runWebSocketServer()
 {
 	io = require('socket.io')(mainListener);
@@ -480,6 +518,7 @@ async function runWebSocketServer()
 		})
 	);
 
+	// Handle connections from clients.
 	io.on('connection', (socket) =>
 	{
 		const { roomId, peerId } = socket.handshake.query;
@@ -506,13 +545,13 @@ async function runWebSocketServer()
 			let returning = false;
 
 			if (peer && !token)
-			{
+			{ // Don't allow hijacking sessions
 				socket.disconnect(true);
 
 				return;
 			}
 			else if (token && room.verifyPeer({ id: peerId, token }))
-			{
+			{ // Returning user, remove if old peer exists
 				if (peer)
 					peer.close();
 
@@ -571,6 +610,9 @@ async function runWebSocketServer()
 	});
 }
 
+/**
+ * Launch as many mediasoup Workers as given in the configuration file.
+ */
 async function runMediasoupWorkers()
 {
 	const { numWorkers } = config.mediasoup;
@@ -599,6 +641,9 @@ async function runMediasoupWorkers()
 	}
 }
 
+/**
+ * Get a Room instance (or create one if it does not exist).
+ */
 async function getOrCreateRoom({ roomId })
 {
 	let room = rooms.get(roomId);

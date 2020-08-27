@@ -1,3 +1,6 @@
+/**
+ * Error produced when a socket request has a timeout.
+ */
 class SocketTimeoutError extends Error
 {
 	constructor(message)

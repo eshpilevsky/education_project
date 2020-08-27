@@ -22,7 +22,27 @@ import { SnackbarProvider } from 'notistack';
 import * as serviceWorker from './serviceWorker';
 import { ReactLazyPreload } from './components/ReactLazyPreload';
 import { detectDevice } from 'mediasoup-client';
+// import messagesEnglish from './translations/en';
+import messagesNorwegian from './translations/nb';
+import messagesGerman from './translations/de';
+import messagesHungarian from './translations/hu';
+import messagesPolish from './translations/pl';
+import messagesDanish from './translations/dk';
+import messagesFrench from './translations/fr';
+import messagesGreek from './translations/el';
+import messagesRomanian from './translations/ro';
+import messagesPortuguese from './translations/pt';
+import messagesChineseSimplified from './translations/cn';
+import messagesChineseTraditional from './translations/tw';
+import messagesSpanish from './translations/es';
+import messagesCroatian from './translations/hr';
+import messagesCzech from './translations/cs';
+import messagesItalian from './translations/it';
+import messagesUkrainian from './translations/uk';
+import messagesTurkish from './translations/tr';
+import messagesLatvian from './translations/lv';
 import messagesRussian from './translations/ru';
+import messagesKazakh from './translations/kk';
 
 import './index.css';
 
@@ -32,7 +52,27 @@ const cache = createIntlCache();
 
 const messages =
 {
+	// 'en' : messagesEnglish,
+	'nb'      : messagesNorwegian,
+	'de'      : messagesGerman,
+	'hu'      : messagesHungarian,
+	'pl'      : messagesPolish,
+	'dk'      : messagesDanish,
+	'fr'      : messagesFrench,
+	'el'      : messagesGreek,
+	'ro'      : messagesRomanian,
+	'pt'      : messagesPortuguese,
+	'zh-hans' : messagesChineseSimplified,
+	'zh-hant' : messagesChineseTraditional,
+	'es'      : messagesSpanish,
+	'hr'      : messagesCroatian,
+	'cs'      : messagesCzech,
+	'it'      : messagesItalian,
+	'uk'      : messagesUkrainian,
+	'tr'      : messagesTurkish,
+	'lv'      : messagesLatvian,
 	'ru'      : messagesRussian,
+	'kk'      : messagesKazakh
 };
 
 const supportedBrowsers={

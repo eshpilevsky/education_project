@@ -12,6 +12,7 @@ const SOCKET_PATH_UNIX = '/tmp/new-edutech-server.sock';
 const SOCKET_PATH_WIN = path.join('\\\\?\\pipe', process.cwd(), 'new-edutech-server');
 const SOCKET_PATH = os.platform() === 'win32' ? SOCKET_PATH_WIN : SOCKET_PATH_UNIX;
 
+// Maps to store all mediasoup objects.
 const workers = new Map();
 const routers = new Map();
 const transports = new Map();
