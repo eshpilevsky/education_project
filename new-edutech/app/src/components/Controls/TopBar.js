@@ -372,24 +372,24 @@ const TopBar = (props) =>
 								</Badge>
 							</IconButton>
 						</Tooltip>
-						{/*<Tooltip*/}
-						{/*	title={intl.formatMessage({*/}
-						{/*		id             : 'tooltip.settings',*/}
-						{/*		defaultMessage : 'Show settings'*/}
-						{/*	})}*/}
-						{/*>*/}
-						{/*	<IconButton*/}
-						{/*		aria-label={intl.formatMessage({*/}
-						{/*			id             : 'tooltip.settings',*/}
-						{/*			defaultMessage : 'Show settings'*/}
-						{/*		})}*/}
-						{/*		className={classes.actionButton}*/}
-						{/*		color='inherit'*/}
-						{/*		onClick={() => setSettingsOpen(!room.settingsOpen)}*/}
-						{/*	>*/}
-						{/*		<SettingsIcon />*/}
-						{/*	</IconButton>*/}
-						{/*</Tooltip>*/}
+						<Tooltip
+							title={intl.formatMessage({
+								id             : 'tooltip.settings',
+								defaultMessage : 'Show settings'
+							})}
+						>
+							<IconButton
+								aria-label={intl.formatMessage({
+									id             : 'tooltip.settings',
+									defaultMessage : 'Show settings'
+								})}
+								className={classes.actionButton}
+								color='inherit'
+								onClick={() => setSettingsOpen(!room.settingsOpen)}
+							>
+								<SettingsIcon />
+							</IconButton>
+						</Tooltip>
 						<Tooltip title={lockTooltip}>
 							<span className={classes.disabledButton}>
 								<IconButton

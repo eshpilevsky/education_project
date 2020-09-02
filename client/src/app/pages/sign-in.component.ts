@@ -34,9 +34,9 @@ import { User } from '../models/user';
             <small class="d-block text-center mt-2">
               <a routerLink="reset_password">Забыли пароль?</a>
             </small>
-            <small class="d-block text-center mt-2">
-              У вас нет аккаунта? <a routerLink="signup">Зарегистрироваться</a> сейчас.
-            </small>
+<!--            <small class="d-block text-center mt-2">-->
+<!--              У вас нет аккаунта? <a routerLink="signup">Зарегистрироваться</a> сейчас.-->
+<!--            </small>-->
           </div>
         </div>
       </div>

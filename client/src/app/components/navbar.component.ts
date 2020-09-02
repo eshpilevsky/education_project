@@ -16,9 +16,9 @@ import { Store } from '@ngxs/store';
             <li class="nav-item mr-2">
               <button class="btn btn-primary" routerLink="">Войти</button>
             </li>
-            <li class="nav-item">
-              <button class="btn btn-secondary" routerLink="signup">Зарегистрироваться</button>
-            </li>
+<!--            <li class="nav-item">-->
+<!--              <button class="btn btn-secondary" routerLink="signup">Зарегистрироваться</button>-->
+<!--            </li>-->
           </ul>
           <ul class="navbar-nav ml-auto" id="navbarNav" *ngIf="user">
             <li class="nav-item" ngbDropdown>

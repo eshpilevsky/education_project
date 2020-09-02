@@ -18,7 +18,7 @@ import { SetUser } from '../store/actions/user.actions';
             <div class="profile-picture">
               <img src="https://api.adorable.io/avatars/150/{{ (user$ | async)?.username }}" alt="profile">
             </div>
-            <h5 class="mt-2">{{ (user$ | async)?.firstname }} {{ (user$ | async)?.lastname }}</h5>
+            <h5 class="mt-2">{{ (user$ | async)?.firstname }} {{ (user$ | async)?.lastname }} {{ (user$ | async)?.phone }}</h5>
             <small class="mb-4 d-block text-secondary">@{{ (user$ | async)?.username }}</small>
             <button class="btn btn-outline-secondary" (click)="onSignOutClick($event)">Выйти</button>
           </div>

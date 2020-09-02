@@ -17,7 +17,7 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
             username=username,
             firstname=firstname,
-            lastname=lastname
+            lastname=lastname,
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -89,7 +89,7 @@ class User(AbstractBaseUser):
     lastname = models.CharField(max_length=255)
     phone = models.CharField(max_length=30)
     balance = models.IntegerField(default=0)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
@@ -157,3 +157,17 @@ class GroupLevel(models.Model):
 
     def __str__(self):
         return self.level
+
+
+class Lesson(models.Model):
+    student_group = models.ForeignKey('StudentGroup', on_delete=models.CASCADE)
+    date = models.DateField()
+    start = models.TimeField()
+    end = models.TimeField()
+    title = models.CharField(max_length=100, blank=True, null=True)
+    room_link = models.URLField(unique=True)
+
+    def __str__(self):
+        start_time = self.start.strftime("%H:%M")  # '07:00'
+        end_time = self.end.strftime("%H:%M")      # '07:50'
+        return "{} ({} - {})".format(self.title, start_time, end_time)

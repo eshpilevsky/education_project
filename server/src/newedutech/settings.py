@@ -68,7 +68,7 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
-DOMAIN = '185.179.83.116'
+DOMAIN = 'http://127.0.0.1:8000'
 SITE_NAME = 'New Edutech'
 DJOSER = {
     'ACTIVATION_URL': 'activate/{uid}/{token}',
