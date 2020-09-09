@@ -1,0 +1,16 @@
+[Unit]
+Description=multiparty-meeting is a audio / video meeting service running in the browser and powered by webRTC
+After=network.target
+
+[Service]
+ExecStart=/var/www/html/education_project/new-edutech/server/server.js
+Restart=always
+User=nobody
+Group=nogroup
+Environment=PATH=/var/bin:/var/www/bin
+Environment=NODE_ENV=production
+WorkingDirectory=/var/www/html/education_project/new-edutech/server
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
