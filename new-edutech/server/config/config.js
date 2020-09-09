@@ -369,10 +369,10 @@ module.exports =
 				// change 2001:DB8::1 IPv6 to your server's IPv6 address!!
 				// { ip: '2001:DB8::1', announcedIp: null }
 			],
-			initialAvailableOutgoingBitrate : 1000000,
+			initialAvailableOutgoingBitrate : 100000,
 			minimumAvailableOutgoingBitrate : 600000,
 			// Additional options that are not part of WebRtcTransportOptions.
-			maxIncomingBitrate              : 1500000
+			maxIncomingBitrate              : 300000
 		}
 	}
 	// Prometheus exporter
